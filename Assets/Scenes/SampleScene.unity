@@ -361,6 +361,7 @@ MonoBehaviour:
     rightWheel: {fileID: 2091514676}
     motor: 1
     steering: 0
+  visibleWheels: []
   maxMotorTorque: 400
   maxSteeringAngle: 30
   _lookAtPoint: {fileID: 2034564144}
@@ -752,7 +753,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 648325016}
-  _offset: {x: 0, y: 5, z: -5}
+  _offset: {x: 0, y: 2, z: -5}
 --- !u!1 &999461029
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,7 +1181,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034564143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
