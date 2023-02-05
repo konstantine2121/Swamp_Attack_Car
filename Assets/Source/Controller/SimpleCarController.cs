@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class AxleInfo
+public class ColliderAxleInfo
 {
     public WheelCollider leftWheel;
     public WheelCollider rightWheel;
@@ -19,10 +19,14 @@ public class VisibleAxleInfo
     public bool steering;
 }
 
+/// <summary>
+/// https://docs.unity3d.com/Manual/WheelColliderTutorial.html
+/// </summary>
 public class SimpleCarController : MonoBehaviour
 {
-    [SerializeField] private List<AxleInfo> axleInfos;
+    [SerializeField] private List<ColliderAxleInfo> axleInfos;
     [SerializeField] private List<VisibleAxleInfo> visibleWheels;
+
     [SerializeField] private float maxMotorTorque;
     [SerializeField] private float maxSteeringAngle;
 
@@ -37,9 +41,41 @@ public class SimpleCarController : MonoBehaviour
                 transform.position;
         }
     }
+
+    private void FixedUpdate()
+    {
+        float motor = maxMotorTorque * Input.GetAxis("Vertical");
+        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+
+        PerformWheelCollidersLogic(motor, steering);
+    }
+
+    #region WheelCollidersLogic
     
-    // finds the corresponding visual wheel
-    // correctly applies the transform
+    private void PerformWheelCollidersLogic(float motor, float steering)
+    {
+        foreach (ColliderAxleInfo axleInfo in axleInfos)
+        {
+            if (axleInfo.steering)
+            {
+                axleInfo.leftWheel.steerAngle = steering;
+                axleInfo.rightWheel.steerAngle = steering;
+            }
+            if (axleInfo.motor)
+            {
+                axleInfo.leftWheel.motorTorque = motor;
+                axleInfo.rightWheel.motorTorque = motor;
+            }
+            ApplyLocalPositionToVisuals(axleInfo.leftWheel);
+            ApplyLocalPositionToVisuals(axleInfo.rightWheel);
+        }
+    }
+
+    /// <summary>
+    /// finds the corresponding visual wheel
+    /// correctly applies the transform
+    /// </summary>
+    /// <param name="collider"></param>
     private void ApplyLocalPositionToVisuals(WheelCollider collider)
     {
         if (collider.transform.childCount == 0)
@@ -57,25 +93,11 @@ public class SimpleCarController : MonoBehaviour
         visualWheel.transform.rotation = rotation;
     }
 
-    private void FixedUpdate()
-    {
-        float motor = maxMotorTorque * Input.GetAxis("Vertical");
-        float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
+    #endregion WheelCollidersLogic
 
-        foreach (AxleInfo axleInfo in axleInfos)
-        {
-            if (axleInfo.steering)
-            {
-                axleInfo.leftWheel.steerAngle = steering;
-                axleInfo.rightWheel.steerAngle = steering;
-            }
-            if (axleInfo.motor)
-            {
-                axleInfo.leftWheel.motorTorque = motor;
-                axleInfo.rightWheel.motorTorque = motor;
-            }
-            ApplyLocalPositionToVisuals(axleInfo.leftWheel);
-            ApplyLocalPositionToVisuals(axleInfo.rightWheel);
-        }
-    }
+    #region VisibleAxleInfoLogic
+
+
+
+    #endregion VisibleAxleInfoLogic
 }
