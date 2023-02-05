@@ -30,6 +30,8 @@ public class SimpleCarController : MonoBehaviour
     [SerializeField] private float maxMotorTorque;
     [SerializeField] private float maxSteeringAngle;
 
+    [SerializeField] private float _maxDownPressureForce;
+
     [SerializeField] private Transform _lookAtPoint;
 
     public Vector3 CameraLookAtPoint

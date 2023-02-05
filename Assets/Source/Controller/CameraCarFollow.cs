@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class CameraCarFollow : MonoBehaviour
 {
-    [SerializeField]private SimpleCarController _target;
-    [SerializeField]private Vector3 _offset;
+    [SerializeField]private GameObject _target;
+    [SerializeField]private Vector3 _cameraPositionOffset;
+    [SerializeField]private Vector3 _cameraLookPointOffset;
 
     private Transform TargetTransform => _target.gameObject.transform;
 
@@ -12,14 +13,14 @@ public class CameraCarFollow : MonoBehaviour
         
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (_target != null)
         {
-            var rotatedVector = TargetTransform.localRotation * _offset;
+            var rotatedVector = TargetTransform.rotation * _cameraPositionOffset;
 
             transform.position = TargetTransform.position + rotatedVector;
-            transform.LookAt(_target.CameraLookAtPoint);
+            transform.LookAt(TargetTransform.position + _cameraLookPointOffset);
         }
     }
 }
