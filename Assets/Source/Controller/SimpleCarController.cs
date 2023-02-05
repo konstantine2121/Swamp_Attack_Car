@@ -10,29 +10,18 @@ public class ColliderAxleInfo
     public bool steering;
 }
 
-[System.Serializable]
-public class VisibleAxleInfo
-{
-    public GameObject leftWheel;
-    public GameObject rightWheel;
-    public bool motor;
-    public bool steering;
-}
-
 /// <summary>
 /// https://docs.unity3d.com/Manual/WheelColliderTutorial.html
 /// </summary>
 public class SimpleCarController : MonoBehaviour
 {
     [SerializeField] private List<ColliderAxleInfo> axleInfos;
-    [SerializeField] private List<VisibleAxleInfo> visibleWheels;
+
+    [SerializeField] private Transform _lookAtPoint;
 
     [SerializeField] private float maxMotorTorque;
     [SerializeField] private float maxSteeringAngle;
-
     [SerializeField] private float _maxDownPressureForce;
-
-    [SerializeField] private Transform _lookAtPoint;
 
     public Vector3 CameraLookAtPoint
     {
@@ -56,18 +45,27 @@ public class SimpleCarController : MonoBehaviour
     
     private void PerformWheelCollidersLogic(float motor, float steering)
     {
-        foreach (ColliderAxleInfo axleInfo in axleInfos)
+        int middleIndex = (axleInfos.Count-1) / 2;
+
+        for (int i =0; i<  axleInfos.Count; i++)
         {
+            var axleInfo = axleInfos[i];
+
+            var invertRotation = i > middleIndex;
+
             if (axleInfo.steering)
             {
-                axleInfo.leftWheel.steerAngle = steering;
-                axleInfo.rightWheel.steerAngle = steering;
+                var localSteering = invertRotation ? -steering : steering;
+
+                axleInfo.leftWheel.steerAngle = localSteering;
+                axleInfo.rightWheel.steerAngle = localSteering;
             }
             if (axleInfo.motor)
             {
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
             }
+
             ApplyLocalPositionToVisuals(axleInfo.leftWheel);
             ApplyLocalPositionToVisuals(axleInfo.rightWheel);
         }
@@ -91,8 +89,8 @@ public class SimpleCarController : MonoBehaviour
         Quaternion rotation;
         collider.GetWorldPose(out position, out rotation);
 
-        visualWheel.transform.position = position;
-        visualWheel.transform.rotation = rotation;
+        visualWheel.position = position;
+        visualWheel.rotation = rotation;
     }
 
     #endregion WheelCollidersLogic

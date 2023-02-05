@@ -5,7 +5,7 @@ using TMPro;
 public class SpeedRegistrator : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rigidbody;
-    
+    private float _cooficient = 3.6f;
     private TMP_Text _textContainer;
 
     private bool TargetExists => _rigidbody;
@@ -23,7 +23,7 @@ public class SpeedRegistrator : MonoBehaviour
 
     private void UpdateSpeedText()
     {
-        var speedValue = TargetExists ? Speed.ToString("0.000") : "none";
+        var speedValue = TargetExists ? (Speed * _cooficient).ToString("0.00") : "none";
         _textContainer.text = "Speed: " + speedValue;
     }
 }
