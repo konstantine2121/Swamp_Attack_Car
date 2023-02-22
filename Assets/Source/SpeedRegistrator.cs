@@ -5,11 +5,13 @@ using TMPro;
 public class SpeedRegistrator : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rigidbody;
-    private float _cooficient = 3.6f;
+    
+    private float _cooficient = 3.6f;    
+
     private TMP_Text _textContainer;
 
     private bool TargetExists => _rigidbody;
-    private float Speed => _rigidbody.velocity.magnitude;
+    private float Speed => _rigidbody ? _rigidbody.velocity.magnitude : 0;
 
     private void Awake()
     {
@@ -23,7 +25,7 @@ public class SpeedRegistrator : MonoBehaviour
 
     private void UpdateSpeedText()
     {
-        var speedValue = TargetExists ? (Speed * _cooficient).ToString("0.00") : "none";
-        _textContainer.text = "Speed: " + speedValue;
+        var speedValue = TargetExists ? (Speed * _cooficient).ToString("0.00")+ " kmph" : "none";
+        _textContainer.text = $"Speed: {speedValue}";
     }
 }
