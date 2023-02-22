@@ -16,7 +16,7 @@ public class ColliderAxleInfo
 /// </summary>
 /// 
 [RequireComponent(typeof(Rigidbody))]
-public class SimpleCarController : MonoBehaviour
+public class CarMovement : MonoBehaviour
 {
     [SerializeField] private List<ColliderAxleInfo> axleInfos;
 
@@ -117,15 +117,13 @@ public class SimpleCarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PerformWheelCollidersLogic();
-        Debug.Log(ForwardSpeed);
+        PerformWheelCollidersLogic();        
     }
 
     #region WheelCollidersLogic
 
     private void PerformWheelCollidersLogic()
     {
-        float vertical = _maxMotorTorque * Input.GetAxis(InputAxis.Vertical);
         float steering = _maxSteeringAngle * Input.GetAxis(InputAxis.Horizontal);
 
         int middleIndex = (axleInfos.Count - 1) / 2;

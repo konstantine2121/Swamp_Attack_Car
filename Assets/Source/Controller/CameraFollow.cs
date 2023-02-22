@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CameraCarFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
     [SerializeField]private GameObject _target;
     [SerializeField]private Vector3 _cameraPositionOffset;
