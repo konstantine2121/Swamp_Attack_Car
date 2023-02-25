@@ -25,7 +25,10 @@ public class SpeedRegistrator : MonoBehaviour
 
     private void UpdateSpeedText()
     {
-        var speedValue = TargetExists ? (Speed * _cooficient).ToString("0.00")+ " kmph" : "none";
+        var speedValue = TargetExists ? 
+            (Speed * _cooficient).ToString("0.00")+ " kmph" : 
+            "none";
+
         _textContainer.text = $"Speed: {speedValue}";
     }
 }
