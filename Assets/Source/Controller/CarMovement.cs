@@ -128,7 +128,7 @@ public class CarMovement : MonoBehaviour
 
         int middleIndex = (axleInfos.Count - 1) / 2;
 
-        DecreaseSideSpeed();
+        //DecreaseSideSpeed();
 
         for (int i = 0; i < axleInfos.Count; i++)
         {
@@ -219,8 +219,14 @@ public class CarMovement : MonoBehaviour
                 
         if (hitTheBreak)
         {
-            DecreaseFrontSpeed();
-            return 0;
+            //DecreaseFrontSpeed();
+
+            var breakTorque = _maxMotorTorque*0.5f;
+            var torque = forwardSpeed > 0 ?
+                -GetTorquePercentPower(_maxForwardSpeed, forwardSpeed, true) :
+                GetTorquePercentPower(_maxBackwardSpeed, forwardSpeed, false);
+
+            return torque;
         }
 
         if (tryMoveForward == tryMoveBackward && Mathf.Abs(forwardSpeed) <= 0.5f)
@@ -235,20 +241,25 @@ public class CarMovement : MonoBehaviour
 
         if (tryMoveForward & movingForward)
         {
-            var torque = _maxMotorTorque * ( Mathf.Abs(_maxForwardSpeed - forwardSpeed) / _maxForwardSpeed);
-            return torque;
+            return GetTorquePercentPower(_maxForwardSpeed, forwardSpeed, true);
         }
 
         if(tryMoveBackward & movingBackward)
         {
-            var torque = _maxMotorTorque * (Mathf.Abs(_maxBackwardSpeed + forwardSpeed) / _maxBackwardSpeed);
-            return -torque;
+            return - GetTorquePercentPower(_maxBackwardSpeed, forwardSpeed, false); ;
         }
 
         return -motorTorque * 0.5f;
     }
 
-    
+    private float GetTorquePercentPower(float maxSpeed, float forwardSpeed, bool movingForward)
+    {
+        var delta = movingForward ?
+            maxSpeed - forwardSpeed :
+            maxSpeed + forwardSpeed;
+
+        return _maxMotorTorque * (Mathf.Abs(delta) / maxSpeed);
+    }
 
     /// <summary>
     /// finds the corresponding visual wheel
